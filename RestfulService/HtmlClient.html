@@ -1,0 +1,119 @@
+<html>
+
+<head>
+  <title>BOOKS</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    function page_Load() {
+      getAll();
+    }
+    function getAll() {
+      axios.get("https://cors-anywhere.herokuapp.com/http://sonkkk.gear.host/api/books/").then((response) => {
+        var books = response.data;
+        //alert(JSON.stringify(books)); // for DEBUG
+        renderBookList(books);
+      });
+    }
+    function renderBookList(books) {
+      var rows = "";
+      for (var book of books) {
+        rows += "<tr onclick='lnkID_Click(" + book.Code + ")' style='cursor:pointer'>";
+        rows += "<td>" + book.Code + "</td>";
+        rows += "<td>" + book.Name + "</td>";
+        rows += "<td>" + book.Author + "</td>";
+        rows += "<td>" + book.Price + "</td>";
+        rows += "</tr>";
+      }
+      var header = "<tr><th>Code</th><th>Name</th><th>Author</th><th>Price</th></tr>";
+      document.getElementById("lstBooks").innerHTML = header + rows;
+    }
+    function lnkID_Click(code) {
+      getDetails(code);
+    }
+    function getDetails(code) {
+      axios.get('https://cors-anywhere.herokuapp.com/http://sonkkk.gear.host/api/books/' + code).then((response) => {
+        var book = response.data;
+        //alert(JSON.stringify(book));
+        document.getElementById("txtCode").value = book.Code;
+        document.getElementById("txtName").value = book.Name;
+        document.getElementById("txtAuthor").value = book.Author;
+        document.getElementById("txtPrice").value = book.Price;
+      });
+    }
+    function btnAdd_Click() {
+      var newBook = {
+        Code: 0,
+        Name: document.getElementById("txtName").value,
+        Author: document.getElementById("txtAuthor").value,
+        Price: document.getElementById("txtPrice").value
+      };
+      axios.post('https://cors-anywhere.herokuapp.com/http://sonkkk.gear.host/api/books/', newBook).then((response) => {
+        var result = response.data;
+        if (result) {
+          getAll();
+        } else {
+          alert('SORRY BABY!');
+        }
+      });
+    }
+    function btnUpdate_Click() {
+      var code = document.getElementById("txtCode").value;
+      var newBook = {
+        Code: code,
+        Name: document.getElementById("txtName").value,
+        Author: document.getElementById("txtAuthor").value,
+        Price: document.getElementById("txtPrice").value
+      };
+      axios.put('https://cors-anywhere.herokuapp.com/http://sonkkk.gear.host/api/books/' + code, newBook).then((response) => {
+        var result = response.data;
+        if (result) {
+          getAll();
+        } else {
+          alert('SORRY BABY!');
+        }
+      });
+    }
+    function btnDelete_Click() {
+      if (confirm('ARE YOU SURE?')) {
+        var code = document.getElementById("txtCode").value;
+        axios.delete('https://cors-anywhere.herokuapp.com/http://sonkkk.gear.host/api/books/' + code).then((response) => {
+          var result = response.data;
+          if (result) {
+            getAll();
+          } else {
+            alert('SORRY BABY!');
+          }
+        });
+      }
+    }
+    function btnSearch_Click() {
+      var keyword = document.getElementById("txtKeyword").value;
+      if (keyword.length > 0) {
+        axios.get("https://cors-anywhere.herokuapp.com/http://sonkkk.gear.host/api/books/search/" + keyword).then((response) => {
+          var books = response.data;
+          renderBookList(books);
+        });
+      } else {
+        getAll();
+      }
+    }
+  </script>
+</head>
+
+<body onload="page_Load()">
+  <h1>LIST BOOK</h1>
+  <input id='txtKeyword' placeholder="Enter keyword">
+  <button onclick="btnSearch_Click()">SEARCH</button>
+  <table id="lstBooks" border="1"></table>
+  <br />
+  <h1>BOOK DETALS</h1>
+  Code <input id='txtCode' readonly><br />
+  Name <input id='txtName'><br />
+  Author <input id='txtAuthor'><br />
+  Price <input id='txtPrice'><br />
+  <button onclick="btnAdd_Click()">ADD NEW</button>
+  <button onclick="btnUpdate_Click()">UPDATE</button>
+  <button onclick="btnDelete_Click()">DELETE</button>
+</body>
+
+</html>
