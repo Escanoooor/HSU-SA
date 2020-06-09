@@ -1,0 +1,43 @@
+<html>
+
+<head>
+  <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase.js"></script>
+  <script src="books.js"></script>
+</head>
+
+<body onload="page_Load()">
+  <h2>BOOK LIST</h2>
+  <input type="text" id="txtKeyword" placeholder="Keyword" />&nbsp;
+  <input type="button" value="SEARCH" onclick="btnSearch_Click()" />
+  <br /><br />
+  <table id="lstBooks" border="1"></table>
+  <br />
+  <h2>BOOK DETAILS</h2>
+  <table>
+    <tr>
+      <td>Code</td>
+      <td><input type="text" id="txtCode" /></td>
+    </tr>
+    <tr>
+      <td>Name</td>
+      <td><input type="text" id="txtName" /></td>
+    </tr>
+    <tr>
+      <td>Author</td>
+      <td><input type="text" id="txtAuthor" /></td>
+    </tr>
+    <tr>
+      <td>Price</td>
+      <td><input type="text" id="txtPrice" /></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <input type="button" value="ADD NEW" onclick="btnAdd_Click()" />
+        <input type="button" value="UPDATE" onclick="btnUpdate_Click()" />
+        <input type="button" value="DELETE" onclick="btnDelete_Click()" />
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>
